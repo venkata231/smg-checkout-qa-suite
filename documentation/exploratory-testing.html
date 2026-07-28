@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploratory Test Session Report - Manual QA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --accent-blue: #38bdf8;
+            --accent-indigo: #818cf8;
+            --accent-emerald: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-title span {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            -webkit-text-fill-color: initial;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        nav ul { display: flex; list-style: none; gap: 8px; }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover { color: var(--text-main); background-color: var(--bg-card-hover); }
+
+        nav a.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .data-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            margin-bottom: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .info-label { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+        .info-val { font-size: 0.95rem; font-weight: 600; color: var(--text-main); margin-top: 2px; }
+
+        .scope-flow {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-size: 0.9rem;
+            color: var(--accent-indigo);
+            font-weight: 500;
+            margin-top: 12px;
+            line-height: 1.8;
+        }
+
+        .bullets-list {
+            padding-left: 24px;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .bullets-list li { margin-bottom: 8px; }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background-color: rgba(15, 23, 42, 0.7);
+            color: var(--text-muted);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-pass { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.3); }
+        .badge-fail { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.3); }
+        .badge-observed { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 24px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="brand-title">
+                Checkout QA Lab <span>Manual QA</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Overview</a></li>
+                    <li><a href="exploratory-testing.html" class="active">Exploratory</a></li>
+                    <li><a href="gherkin-scenarios.html">Gherkins</a></li>
+                    <li><a href="manual-test-cases.html">Focused Results</a></li>
+                    <li><a href="bugs-and-recommendations.html">Bugs & Recs</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1 class="page-title">Exploratory Test Session Report</h1>
+            <p class="page-subtitle">High-level end-to-end shopping journey exploratory findings, execution scenarios, and observations.</p>
+        </div>
+
+        <div class="data-card">
+            <h2 class="section-title">1. Session Overview</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Session</div>
+                    <div class="info-val">End-to-End Shopping & Checkout Journey</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Test Type</div>
+                    <div class="info-val">Exploratory Testing</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Environment</div>
+                    <div class="info-val">Staging – Checkout QA Lab</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-val" style="color: var(--accent-emerald);">Completed</div>
+                </div>
+            </div>
+
+            <h3 style="font-size: 1rem; color: var(--text-main); margin-top: 20px; margin-bottom: 8px;">Scope Covered</h3>
+            <div class="scope-flow">
+                Product discovery &rarr; Search and filtering &rarr; Basket management &rarr; Stock boundaries &rarr; Checkout &rarr; Promotions &rarr; Delivery &rarr; Form validation &rarr; Payment &rarr; Order confirmation &rarr; Post-order state
+            </div>
+
+            <h3 style="font-size: 1rem; color: var(--text-main); margin-top: 24px; margin-bottom: 12px;">Testing Approach</h3>
+            <p style="color: var(--text-muted); margin-bottom: 12px;">Testing was performed using an end-to-end customer journey, with additional exploratory variations around:</p>
+            <ul class="bullets-list">
+                <li>Product search and discovery</li>
+                <li>Single and multiple product baskets</li>
+                <li>Quantity and stock boundaries</li>
+                <li>Basket calculations</li>
+                <li>Checkout field validation</li>
+                <li>Promotional codes</li>
+                <li>Delivery options and pricing</li>
+                <li>Order placement and confirmation</li>
+                <li>Order history & Application state after completion</li>
+            </ul>
+        </div>
+
+        <div class="data-card">
+            <h2 class="section-title">2. Exploratory Test Execution Summary (32 Scenarios)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 16px;">The table below summarizes the key scenarios executed during the exploratory session.</p>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Test Scenario</th>
+                            <th>Expected Result</th>
+                            <th>Result</th>
+                            <th>Notes / Defect ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>EXP-01</td><td>Add multiple different products to basket</td><td>All selected products are added correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-02</td><td>Add multiple quantities of products</td><td>Basket quantity and total item count update correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-03</td><td>Verify item lines and total item quantity</td><td>Correct number of product lines and total items displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-04</td><td>Verify product line total when quantity is increased</td><td>Line total reflects unit price &times; quantity</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-05</td><td>Carry multiple products from basket to checkout</td><td>Products, quantities and prices appear correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-06</td><td>Verify subtotal for a multi-product basket</td><td>Subtotal equals the sum of all product line totals</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-07</td><td>Apply WELCOME5 promotional code</td><td>&pound;5 discount is applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-08</td><td>Verify total after WELCOME5</td><td>Total is reduced correctly by &pound;5</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-09</td><td>Apply SAVE10 promotional code</td><td>10% discount is applied correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-10</td><td>Verify total after SAVE10</td><td>Total is recalculated correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-11</td><td>Select Express delivery for basket below &pound;50</td><td>&pound;7.99 Express delivery charge is applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-12</td><td>Change delivery method</td><td>Selected delivery method is reflected in checkout</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-13</td><td>Submit checkout without Address Line 1</td><td>Order is prevented and validation is displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-14</td><td>Submit checkout without postcode</td><td>Order is prevented and validation is displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-15</td><td>Submit checkout without card number</td><td>Order is prevented and validation is displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-16</td><td>Submit checkout without accepting terms</td><td>Order is prevented and validation is displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-17</td><td>Submit checkout without City</td><td>Order can be completed without City</td><td><span class="badge badge-observed">Observed</span></td><td>Requirement not defined; recorded for clarification</td></tr>
+                        <tr><td>EXP-18</td><td>Complete checkout with valid required details</td><td>Order is successfully created</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-19</td><td>Verify order confirmation</td><td>Order ID and final total are displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-20</td><td>Navigate to Orders after checkout</td><td>Completed order appears in order history</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-21</td><td>Verify order history total</td><td>Order total matches checkout total</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-22</td><td>Verify promotional discount in completed order</td><td>Final order reflects the discounted total</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-23</td><td>Verify stock after purchase</td><td>Purchased quantity is deducted from available stock</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-24</td><td>Edit basket from checkout</td><td>User can return to basket and modify order</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-25</td><td>Remove an item from basket</td><td>Item is removed and basket totals update</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-26</td><td>Increase and decrease quantity within permitted range</td><td>Basket quantity and totals update correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-27</td><td>Search using partial product text</td><td>Matching products are displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-28</td><td>Complete repeated end-to-end shopping journeys</td><td>Multiple shopping journeys can be completed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>EXP-29</td><td>Continue typing while live search results update</td><td>Search input remains focused and usable</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-001</td></tr>
+                        <tr><td>EXP-30</td><td>Return to basket after successful checkout</td><td>Purchased products are removed from active basket</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-002</td></tr>
+                        <tr><td>EXP-31</td><td>Increase quantity when available stock exceeds 5</td><td>Quantity can be increased according to available stock</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-003</td></tr>
+                        <tr><td>EXP-32</td><td>Check checkout navigation after successful order completion</td><td>Navigation no longer indicates payment is pending</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-005</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="data-card">
+            <h2 class="section-title">3. Exploratory Observations &amp; Outcome</h2>
+            <ul class="bullets-list" style="margin-bottom: 20px;">
+                <li><strong>BUG-001:</strong> Search input loses focus when live search results update.</li>
+                <li><strong>BUG-002:</strong> Purchased items remain in basket after successful checkout.</li>
+                <li><strong>BUG-003:</strong> Basket quantity is capped at 5 despite higher available stock.</li>
+                <li><strong>BUG-005:</strong> Checkout navigation continues to show "Pay" after successful order completion.</li>
+            </ul>
+            <p style="color: var(--text-muted);">
+                The findings from this exploratory session were used to inform a structured focused testing approach, where search/sorting, stock boundaries, promotional stacking rules, payment validation, duplicate order submission, order history, and CSV export were investigated systematically.
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <p>Checkout QA Lab - Manual QA Documentation Suite &copy; 2026</p>
+    </footer>
+</body>
+</html>

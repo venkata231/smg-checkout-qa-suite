@@ -1,0 +1,41 @@
+{
+  "name": "shopper-checkout-qa-suite",
+  "version": "1.0.0",
+  "description": "End-to-end quality engineering project using Playwright, Cucumber BDD and TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js --tags '@regression'",
+    "test:ci": "cucumber-js --tags '@regression and not @known-defect'",
+    "test:regression": "cucumber-js --tags '@regression'",
+    "test:search": "cucumber-js --tags '@search'",
+    "test:basket": "cucumber-js --tags '@basket'",
+    "test:promotions": "cucumber-js --tags '@promotions'",
+    "test:payment": "cucumber-js --tags '@payment'",
+    "test:checkout": "cucumber-js --tags '@checkout'",
+    "test:headed": "HEADLESS=false cucumber-js --tags '@regression'",
+    "test:report": "cucumber-js --tags '@regression' && node generate-report.js"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "cucumber",
+    "bdd",
+    "test-automation",
+    "quality-engineering",
+    "e2e-testing"
+  ],
+  "author": "Venkata Saripella",
+  "license": "MIT",
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.8.0",
+    "@playwright/test": "^1.45.0",
+    "@types/chai": "^5.2.3",
+    "@types/node": "^20.14.0",
+    "chai": "^4.3.10",
+    "dotenv": "^17.4.2",
+    "multiple-cucumber-html-reporter": "^3.6.0",
+    "playwright": "^1.45.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  }
+}

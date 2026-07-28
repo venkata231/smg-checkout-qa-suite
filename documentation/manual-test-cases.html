@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focused Manual Test Execution Results - Manual QA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --accent-blue: #38bdf8;
+            --accent-indigo: #818cf8;
+            --accent-emerald: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-title span {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            -webkit-text-fill-color: initial;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        nav ul { display: flex; list-style: none; gap: 8px; }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover { color: var(--text-main); background-color: var(--bg-card-hover); }
+
+        nav a.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header { margin-bottom: 32px; }
+        .page-title { font-size: 2rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+        .page-subtitle { color: var(--text-muted); font-size: 1rem; }
+
+        .data-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.88rem;
+        }
+
+        th {
+            background-color: rgba(15, 23, 42, 0.7);
+            color: var(--text-muted);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        tr:hover td { background-color: rgba(255, 255, 255, 0.02); }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-pass { background: rgba(52, 211, 153, 0.15); color: var(--accent-emerald); border: 1px solid rgba(52, 211, 153, 0.3); }
+        .badge-fail { background: rgba(251, 113, 133, 0.15); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.3); }
+        .badge-clarify, .badge-obs { background: rgba(251, 191, 36, 0.15); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.3); }
+        .badge-na { background: rgba(148, 163, 184, 0.15); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.3); }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 24px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="brand-title">
+                Checkout QA Lab <span>Manual QA</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Overview</a></li>
+                    <li><a href="exploratory-testing.html">Exploratory</a></li>
+                    <li><a href="gherkin-scenarios.html">Gherkins</a></li>
+                    <li><a href="manual-test-cases.html" class="active">Focused Results</a></li>
+                    <li><a href="bugs-and-recommendations.html">Bugs & Recs</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1 class="page-title">Focused Manual Test Execution Results</h1>
+            <p class="page-subtitle">Comprehensive execution matrix covering 66 focused test scenarios across 8 application modules.</p>
+        </div>
+
+        <!-- 1. Product Catalogue -->
+        <div class="data-card">
+            <div class="section-title">
+                <span>1. Product Catalogue, Search &amp; Sort</span>
+                <span class="badge badge-pass">14 Scenarios</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Test Scenario</th><th>Expected Result</th><th>Result</th><th>Notes / Defect ID</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>CAT-01</td><td>Search using exact product name</td><td>Exact matching product is displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-02</td><td>Search using partial product name</td><td>Relevant matching products displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-03</td><td>Search using SKU</td><td>Matching product is displayed</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-006 – Valid SKU returns no products</td></tr>
+                        <tr><td>CAT-04</td><td>Search using brand</td><td>Matching products are displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-05</td><td>Search using category</td><td>Matching products are displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-06</td><td>Search using text with no matches</td><td>Clear no-results state is displayed</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-07</td><td>Clear an active search</td><td>Full catalogue is restored</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-08</td><td>Sort products price low to high</td><td>Products displayed in ascending price order</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-10</td><td>Apply search and sorting together</td><td>Matching results remain correctly sorted</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CAT-11</td><td>Continue typing while live search updates</td><td>Search remains focused and usable</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-001 – Search input loses focus</td></tr>
+                        <tr><td>CAT-12</td><td>Sort products by Recommended</td><td>Products displayed according to recommendation logic</td><td><span class="badge badge-clarify">Clarification</span></td><td>Recommendation criteria not defined; OBS-001</td></tr>
+                        <tr><td>CAT-13</td><td>Sort products stock low to high</td><td>Products displayed in ascending stock order</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-007 – Sort direction reversed</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2. Basket & Stock -->
+        <div class="data-card">
+            <div class="section-title">
+                <span>2. Basket &amp; Stock</span>
+                <span class="badge badge-pass">12 Scenarios</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Test Scenario</th><th>Expected Result</th><th>Result</th><th>Notes / Defect ID</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>BAS-01</td><td>Add one available product</td><td>Product is added with quantity 1</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-02</td><td>Add multiple different products</td><td>All products appear correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-03</td><td>Increase quantity within available stock</td><td>Quantity and totals update correctly</td><td><span class="badge badge-pass">Pass</span></td><td>Up to supported maximum</td></tr>
+                        <tr><td>BAS-04</td><td>Decrease product quantity</td><td>Quantity and totals update correctly</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-05</td><td>Remove a product</td><td>Product is removed and totals recalculate</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-06</td><td>Increase quantity to available stock</td><td>Available stock quantity can be selected</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-003 – Quantity capped at 5</td></tr>
+                        <tr><td>BAS-07</td><td>Attempt to exceed available stock</td><td>Increase is prevented with appropriate validation</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-08</td><td>Increase above 5 when stock > 5</td><td>Quantity follows available stock</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-003 – Capped at 5 despite higher stock</td></tr>
+                        <tr><td>BAS-09</td><td>Verify line total after changing quantity</td><td>Unit price &times; quantity is correct</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-10</td><td>Verify subtotal with multiple products</td><td>Sum of line totals equals subtotal</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-11</td><td>Remove all products</td><td>Basket becomes empty and checkout unavailable</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>BAS-12</td><td>Complete order and return to basket</td><td>Purchased products removed from active basket</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-002 – Purchased items remain in basket</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. Promotions -->
+        <div class="data-card">
+            <div class="section-title">
+                <span>3. Promotions</span>
+                <span class="badge badge-pass">20 Scenarios</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Test Scenario</th><th>Expected Result</th><th>Result</th><th>Notes / Defect ID</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>PRO-01</td><td>Apply SAVE10</td><td>Valid discount is applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-02</td><td>Verify SAVE10 calculation</td><td>10% discount and final total are correct</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-03</td><td>Apply WELCOME5</td><td>Valid discount is applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-04</td><td>Verify WELCOME5 calculation</td><td>&pound;5 discount and final total are correct</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-05</td><td>Apply invalid promo code</td><td>Code rejected and total remains unchanged</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-06</td><td>Apply second promo while another active</td><td>Offers should not combine</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-014 – Offers combine (e.g. &pound;5 + 10%)</td></tr>
+                        <tr><td>PRO-07</td><td>Replace or remove an applied promo</td><td>Option to remove or replace promo</td><td><span class="badge badge-na">Not Supported</span></td><td>No remove promo button available; REC-004</td></tr>
+                        <tr><td>PRO-08</td><td>Apply the same promo repeatedly</td><td>Promo applied only once</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-008 – Promo can be applied repeatedly</td></tr>
+                        <tr><td>PRO-09</td><td>Enter promo using different letter case</td><td>Consistent behavior</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-10</td><td>Enter promo with leading/trailing spaces</td><td>Whitespace trimmed and valid promo applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-11</td><td>Reset after applying promo</td><td>Promotional state cleared</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PRO-12</td><td>Reuse WELCOME5 on completed order</td><td>Reuse policy enforced</td><td><span class="badge badge-clarify">Clarification</span></td><td>Requires confirmation of reuse rule</td></tr>
+                        <tr><td>PRO-13</td><td>Apply an expired promo code</td><td>Expired code rejected</td><td><span class="badge badge-na">Not Testable</span></td><td>No expired test data provided</td></tr>
+                        <tr><td>PRO-14</td><td>Apply promo before start date</td><td>Future code rejected</td><td><span class="badge badge-na">Not Testable</span></td><td>No future-dated test data provided</td></tr>
+                        <tr><td>PRO-15 to 20</td><td>Threshold, empty basket &amp; nav tests</td><td>Promotional edge cases</td><td><span class="badge badge-pass">Pass / Mixed</span></td><td>Refer to main defect log</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 4. Delivery & 5. Checkout Validation -->
+        <div class="data-card">
+            <div class="section-title">
+                <span>4. Delivery &amp; 5. Checkout Validation</span>
+                <span class="badge badge-pass">23 Scenarios</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Test Scenario</th><th>Expected Result</th><th>Result</th><th>Notes / Defect ID</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>DEL-01</td><td>Standard delivery below &pound;50</td><td>Correct delivery charge applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>DEL-03</td><td>Standard delivery above &pound;50</td><td>Free delivery applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>DEL-04</td><td>Express delivery below &pound;50</td><td>&pound;7.99 delivery charge applied</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>DEL-06</td><td>Express delivery above &pound;50</td><td>Follows intended delivery rule</td><td><span class="badge badge-clarify">Clarification</span></td><td>Express becomes &pound;0 above &pound;50; REC-003</td></tr>
+                        <tr><td>CHK-01</td><td>Submit without Address Line 1</td><td>Order blocked with validation</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CHK-02</td><td>Submit without City</td><td>Matches intended required-field rules</td><td><span class="badge badge-clarify">Clarification</span></td><td>Order completed without City</td></tr>
+                        <tr><td>CHK-03</td><td>Submit without postcode</td><td>Order blocked with validation</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CHK-04</td><td>Submit without card number</td><td>Order blocked with validation</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CHK-07</td><td>Submit without accepting terms</td><td>Order blocked with validation</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>CHK-08</td><td>Enter invalid card number format</td><td>Invalid input rejected</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-009 – Arbitrary invalid cards accepted</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 6. Payment, 7. Order History & 8. Navigation -->
+        <div class="data-card">
+            <div class="section-title">
+                <span>6. Payment, 7. Order History &amp; 8. Navigation</span>
+                <span class="badge badge-pass">24 Scenarios</span>
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr><th>ID</th><th>Test Scenario</th><th>Expected Result</th><th>Result</th><th>Notes / Defect ID</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>PAY-01</td><td>Place order with accepted card</td><td>Order successfully created</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>PAY-02</td><td>Place order with declined card</td><td>Payment declined and order blocked</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-013 – Declined card accepted</td></tr>
+                        <tr><td>PAY-04</td><td>Rapidly click Place Order multiple times</td><td>Only one confirmed order created</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-010 – Multiple duplicate orders created</td></tr>
+                        <tr><td>PAY-05</td><td>Check nav after successful payment</td><td>UI should not show Pay outstanding</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-005 – Nav continues to show Pay</td></tr>
+                        <tr><td>ORD-01</td><td>View completed order in history</td><td>Completed order appears in history</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>ORD-07</td><td>Export orders to CSV</td><td>Export file generated</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                        <tr><td>ORD-09</td><td>Verify exported final order amount</td><td>Exported total matches final order total</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-012 – CSV subtotal exported as Total</td></tr>
+                        <tr><td>ORD-11</td><td>Sort orders using grid columns</td><td>Orders sorted by selected column</td><td><span class="badge badge-fail">Fail</span></td><td>BUG-011 – Grid column sorting unavailable</td></tr>
+                        <tr><td>NAV-01</td><td>Navigate between application sections</td><td>Navigation works without state corruption</td><td><span class="badge badge-pass">Pass</span></td><td></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Checkout QA Lab - Manual QA Documentation Suite &copy; 2026</p>
+    </footer>
+</body>
+</html>

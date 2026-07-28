@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bugs and Recommendations - Manual QA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-card-hover: #334155;
+            --accent-blue: #38bdf8;
+            --accent-indigo: #818cf8;
+            --accent-emerald: #34d399;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .brand-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-indigo));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-title span {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            -webkit-text-fill-color: initial;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+        }
+
+        nav ul { display: flex; list-style: none; gap: 8px; }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        nav a:hover { color: var(--text-main); background-color: var(--bg-card-hover); }
+
+        nav a.active {
+            color: #ffffff;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(129, 140, 248, 0.2));
+            border: 1px solid rgba(56, 189, 248, 0.4);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1300px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .page-header { margin-bottom: 32px; }
+        .page-title { font-size: 2rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+        .page-subtitle { color: var(--text-muted); font-size: 1rem; }
+
+        .bug-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--accent-rose);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        .bug-card.rec-card {
+            border-left-color: var(--accent-blue);
+        }
+
+        .bug-card.obs-card {
+            border-left-color: var(--accent-amber);
+        }
+
+        .bug-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .bug-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .bug-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .badge-high { background: rgba(251, 113, 133, 0.2); color: var(--accent-rose); border: 1px solid rgba(251, 113, 133, 0.4); }
+        .badge-medium { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); border: 1px solid rgba(251, 191, 36, 0.4); }
+        .badge-low { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.4); }
+
+        .bug-meta {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .bug-section { margin-bottom: 12px; }
+        .bug-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 4px; }
+        .bug-content { font-size: 0.95rem; color: var(--text-main); }
+
+        .steps-list {
+            padding-left: 20px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+        }
+
+        .steps-list li { margin-bottom: 4px; }
+
+        footer {
+            background-color: var(--bg-card);
+            border-top: 1px solid var(--border-color);
+            padding: 24px 0;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="brand-title">
+                Checkout QA Lab <span>Manual QA</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Overview</a></li>
+                    <li><a href="exploratory-testing.html">Exploratory</a></li>
+                    <li><a href="gherkin-scenarios.html">Gherkins</a></li>
+                    <li><a href="manual-test-cases.html">Focused Results</a></li>
+                    <li><a href="bugs-and-recommendations.html" class="active">Bugs & Recs</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <h1 class="page-title">Defect Reports &amp; UX Recommendations</h1>
+            <p class="page-subtitle">Detailed functional bugs (BUG-001 to BUG-014), observations, and UX recommendations logged during testing.</p>
+        </div>
+
+        <h2 style="font-size: 1.5rem; color: #ffffff; margin-bottom: 20px;">Functional Defects</h2>
+
+        <!-- BUG-001 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-001 – Search input loses focus when results update</div>
+                <div class="bug-tags">
+                    <span class="badge badge-low">Severity: Low</span>
+                    <span class="badge badge-medium">Priority: Medium</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Exploratory Testing / CAT-11</div>
+            <div class="bug-section">
+                <div class="bug-label">Steps to Reproduce</div>
+                <ol class="steps-list">
+                    <li>Navigate to Shop &amp; basket.</li>
+                    <li>Click the Search field.</li>
+                    <li>Begin entering a search term.</li>
+                    <li>Wait for the product results to update.</li>
+                    <li>Attempt to continue typing.</li>
+                </ol>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Expected Result</div>
+                <div class="bug-content">Focus should remain in the Search field while results update, allowing the user to continue typing without additional interaction.</div>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">The Search field loses focus when results update. User must click back into the field before continuing to type.</div>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Impact</div>
+                <div class="bug-content">Interrupts the search journey and creates unnecessary interaction friction for the user.</div>
+            </div>
+        </div>
+
+        <!-- BUG-002 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-002 – Purchased items remain in basket after successful checkout</div>
+                <div class="bug-tags">
+                    <span class="badge badge-medium">Severity: Medium</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Exploratory Testing / BAS-12 / PAY-07</div>
+            <div class="bug-section">
+                <div class="bug-label">Steps to Reproduce</div>
+                <ol class="steps-list">
+                    <li>Add a product to the basket.</li>
+                    <li>Complete checkout successfully.</li>
+                    <li>Confirm that the order has been created.</li>
+                    <li>Navigate back to Shop &amp; basket.</li>
+                    <li>Observe the basket contents.</li>
+                </ol>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Expected Result</div>
+                <div class="bug-content">Products included in a successfully completed order should be cleared from the active basket.</div>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Purchased products remain in the active basket and can be taken through checkout again.</div>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Impact</div>
+                <div class="bug-content">Customers may accidentally place duplicate orders, and the basket state does not accurately reflect completed transactions.</div>
+            </div>
+        </div>
+
+        <!-- BUG-003 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-003 – Basket quantity is capped at 5 despite higher available stock</div>
+                <div class="bug-tags">
+                    <span class="badge badge-medium">Severity: Medium</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Exploratory Testing / BAS-06 / BAS-08</div>
+            <div class="bug-section">
+                <div class="bug-label">Steps to Reproduce</div>
+                <ol class="steps-list">
+                    <li>Select a product showing more than 5 units in stock.</li>
+                    <li>Add the product to the basket.</li>
+                    <li>Increase the quantity to 5.</li>
+                    <li>Attempt to increase the quantity to 6.</li>
+                </ol>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Expected Result</div>
+                <div class="bug-content">The customer should be able to increase quantity up to available stock unless a max-per-order rule is defined.</div>
+            </div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Quantity cannot exceed 5. Application states maximum quantity is 5 despite showing higher available stock.</div>
+            </div>
+        </div>
+
+        <!-- BUG-005 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-005 – Checkout navigation continues to show "Pay" after order completion</div>
+                <div class="bug-tags">
+                    <span class="badge badge-low">Severity: Low</span>
+                    <span class="badge badge-medium">Priority: Medium</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Exploratory Testing / PAY-05 / NAV-05</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Checkout/payment navigation item continues to display Pay after successful order completion.</div>
+            </div>
+        </div>
+
+        <!-- BUG-006 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-006 – Product search does not return results when searching by SKU</div>
+                <div class="bug-tags">
+                    <span class="badge badge-medium">Severity: Medium</span>
+                    <span class="badge badge-medium">Priority: Medium</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – CAT-03</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Searching exact SKU (e.g. SKU-AUD-PODS) displays "No products found".</div>
+            </div>
+        </div>
+
+        <!-- BUG-008 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-008 – Same promotional code can be applied multiple times</div>
+                <div class="bug-tags">
+                    <span class="badge badge-high">Severity: High</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – PRO-08</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Applying WELCOME5 three times creates three applied promotions and gives a total discount of &pound;15.</div>
+            </div>
+        </div>
+
+        <!-- BUG-009 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-009 – Checkout accepts invalid card number formats</div>
+                <div class="bug-tags">
+                    <span class="badge badge-high">Severity: High</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – CHK-08</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Checkout accepts arbitrary invalid card strings and allows order to be placed successfully.</div>
+            </div>
+        </div>
+
+        <!-- BUG-010 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-010 – Multiple orders created when Place Order is clicked rapidly</div>
+                <div class="bug-tags">
+                    <span class="badge badge-high">Severity: High</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – PAY-04</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Rapid clicks create multiple confirmed orders (up to 9 orders created for single transaction during testing).</div>
+            </div>
+        </div>
+
+        <!-- BUG-012 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-012 – CSV export contains incorrect final order totals</div>
+                <div class="bug-tags">
+                    <span class="badge badge-high">Severity: High</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – ORD-09 / ORD-12</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">CSV Total column contains original subtotal without subtracting promotional discounts or adding delivery fees.</div>
+            </div>
+        </div>
+
+        <!-- BUG-013 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-013 – Order is successfully created using declined test card</div>
+                <div class="bug-tags">
+                    <span class="badge badge-high">Severity: High</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – PAY-02</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Entering test declined card 4000000000000002 is accepted and order is confirmed.</div>
+            </div>
+        </div>
+
+        <!-- BUG-014 -->
+        <div class="bug-card">
+            <div class="bug-header">
+                <div class="bug-title">BUG-014 – Multiple different promotional offers can be combined</div>
+                <div class="bug-tags">
+                    <span class="badge badge-high">Severity: High</span>
+                    <span class="badge badge-high">Priority: High</span>
+                </div>
+            </div>
+            <div class="bug-meta">Found During: Focused Testing – PRO-06</div>
+            <div class="bug-section">
+                <div class="bug-label">Actual Result</div>
+                <div class="bug-content">Both WELCOME5 (&pound;5) and SAVE10 (10%) can be combined on same order violating promo policy.</div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <h2 style="font-size: 1.5rem; color: #ffffff; margin-top: 40px; margin-bottom: 20px;">UX &amp; Product Recommendations</h2>
+
+        <div class="bug-card rec-card">
+            <div class="bug-header">
+                <div class="bug-title">REC-001 – Clearly indicate mandatory checkout fields</div>
+            </div>
+            <div class="bug-content">Add visual asterisks or "Required" labels to Address Line 1, Postcode, Card Number, and Terms checkbox to prevent user submission errors.</div>
+        </div>
+
+        <div class="bug-card rec-card">
+            <div class="bug-header">
+                <div class="bug-title">REC-002 – Improve text formatting and pluralisation</div>
+            </div>
+            <div class="bug-content">Fix product title and SKU spacing. Use dynamic grammatically correct pluralisation (e.g. "1 item line, 1 item" vs "2 item lines, 5 items").</div>
+        </div>
+
+        <div class="bug-card rec-card">
+            <div class="bug-header">
+                <div class="bug-title">REC-003 – Clarify Express delivery pricing</div>
+            </div>
+            <div class="bug-content">Display "Express – &pound;7.99 (Free over &pound;50)" so users understand why charge drops to &pound;0 for orders over &pound;50.</div>
+        </div>
+
+        <div class="bug-card rec-card">
+            <div class="bug-header">
+                <div class="bug-title">REC-004 – Provide option to remove applied promo code</div>
+            </div>
+            <div class="bug-content">Provide a clear "Remove" button next to applied promo codes so shoppers can change promotions without resetting checkout state.</div>
+        </div>
+
+        <div class="bug-card rec-card">
+            <div class="bug-header">
+                <div class="bug-title">REC-005 – Provide access to individual order details</div>
+            </div>
+            <div class="bug-content">Allow users to click an Order ID row in Order History to view full line-item details, applied promo discounts, and delivery breakdown.</div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Checkout QA Lab - Manual QA Documentation Suite &copy; 2026</p>
+    </footer>
+</body>
+</html>
